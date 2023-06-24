@@ -1,6 +1,5 @@
 import NextAuth, { Profile, Session, TokenSet, User } from "next-auth";
 import { JWT } from "next-auth/jwt/types";
-import jwt_decode from "jwt-decode";
 
 export const authOptions = {
   providers: [
@@ -51,7 +50,6 @@ export const authOptions = {
       token,
       account,
       user,
-      profile,
     }: {
       token: JWT;
       account: {
@@ -63,8 +61,7 @@ export const authOptions = {
       profile: Profile;
     }) {
       // Persist the OAuth access_token to the token right after signin
-      // we are authorizing with rollup we will have the encoded tokens
-      console.log({ token });
+      // we are authorizing with worldcoin we will have the encoded tokens
       if (account) {
         return {
           access_token: account.access_token,
@@ -81,35 +78,6 @@ export const authOptions = {
         // If the access token has not expired yet, return it
         return token;
       }
-      // If the access token has expired, try to refresh it
-      try {
-        const response = await fetch(`${process.env.ROLLUP_DOMAIN}/token`, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            client_id: process.env.WORLDCOIN_APP_ID!,
-            client_secret: process.env.WORLDCOIN_APP_SECRET!,
-            grant_type: "refresh_token",
-            refresh_token: token.refresh_token as string,
-          }),
-          method: "POST",
-        });
-
-        const tokens: TokenSet = await response.json();
-
-        if (!response.ok) throw tokens;
-
-        return {
-          ...token, // Keep the previous token properties
-          access_token: tokens.access_token,
-          expires_at: new Date().setMinutes(new Date().getMinutes() + 60),
-          // Fall back to old refresh token, but note that
-          // many providers may only allow using a refresh token once.
-          refresh_token: tokens.refresh_token ?? token.refresh_token,
-        };
-      } catch (error) {
-        console.error("Error refreshing access token: ", error);
-        return { ...token, error: "RefreshAccessTokenError" as const };
-      }
     },
     async session({
       session,
@@ -118,11 +86,11 @@ export const authOptions = {
       session: Session & { accessToken: string; user: User; error: string };
       token: JWT;
     }) {
-      // Send propertaies to the client, like an access_token from a provider.
+      // Send properties to the client, like an access_token from a provider.
       session.accessToken = token.access_token as string;
       session.user = token.user as User;
       session.error = token.error as string;
-      
+
       return session;
     },
   },
