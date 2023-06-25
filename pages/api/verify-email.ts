@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { VercelApiHandler, VercelRequest, VercelResponse } from "@vercel/node";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
@@ -6,17 +6,18 @@ import { authOptions } from "./auth/[...nextauth]";
 import supabase from "../../services/supabase";
 import { getAuthUser } from "../../services/auth";
 
-const handler = async (req: VercelRequest, res: VercelResponse) => {
+export const handler: VercelApiHandler = async (req, res) => {
   // get email hash and nonce from query params
   const { hash } = req.query;
 
-  //@ts-ignore
+  // @ts-ignore
   const session = await getServerSession(req, res, authOptions);
 
   const authUser = getAuthUser(session);
 
   if (!authUser) {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
 
   // get user from database
@@ -26,10 +27,11 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
 
   // if user doesn't exist, return error
   if (!user) {
-    return res.status(404).json({ error: "User not found" });
+    res.status(404).json({ error: "User not found" });
+    return;
   }
 
-  return res.status(200).json({ message: "User verified" });
+  res.status(200).json({ message: "User verified" });
 };
 
 export default handler;
