@@ -60,7 +60,7 @@ export const handler: VercelApiHandler = async (req, res) => {
       .insert([{ sender: sender.sub, hash: hash, recipient: authUser.id }]),
   ]);
 
-  res.status(200).json({ sender, recipient: authUser });
+  res.status(200).json({ success: true });
 };
 
 export default allowCors(handler);

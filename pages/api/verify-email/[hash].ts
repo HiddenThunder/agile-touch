@@ -16,22 +16,26 @@ export const handler: VercelApiHandler = async (req, res) => {
   }
 
   // get sender from database
-  const sender = (
-    await supabase_ADMIN_UNSAFE_FULL_ACCESS
-      .from("senders")
-      .select("hash")
-      .match({
-        hash,
-      })
-  ).data?.[0] as unknown as {
+  const [senderRes, emailRes] = await Promise.all([
+    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("senders").select("hash").match({
+      hash,
+    }),
+    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("emails").select("sub").match({
+      hash,
+    }),
+  ]);
+
+  const sender = senderRes.data?.[0] as unknown as {
     sub: string;
     rep: string;
     created_at: string;
   };
 
+  const isRealHuman =
+    emailRes.data?.length && emailRes.data.length > 0 ? true : false;
   // if user doesn't exist, return error
   if (!sender) {
-    res.status(200).json({ sender: null });
+    res.status(200).json({ rep: 5, isRealHuman });
     return;
   }
 
@@ -40,7 +44,7 @@ export const handler: VercelApiHandler = async (req, res) => {
     return;
   }
 
-  res.status(200).json({ rep: sender.rep });
+  res.status(200).json({ rep: sender.rep, isRealHuman });
 };
 
 export default allowCors(handler);
