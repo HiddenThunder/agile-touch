@@ -1,4 +1,6 @@
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import logo from "../public/logo.png";
 
 export default function AccessToken() {
   const { data: session, status } = useSession();
@@ -8,11 +10,23 @@ export default function AccessToken() {
   }
 
   if (status === "unauthenticated") {
-    return <p>Start the demo by signing in.</p>;
+    return (
+      <div
+        className="border border-black flex flex-col justify-center items-center h-screen mx-6
+    shadow rounded-lg"
+      >
+        <Image src={logo} alt="Worldcoinemail Logo" />
+        <p>Start the demo by signing in.</p>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div
+      className="border border-black flex flex-col justify-center items-center h-screen mx-6
+    shadow rounded-lg"
+    >
+      <Image src={logo} alt="Worldcoinemail Logo" />
       <p className="text-sm my-2">
         Hi {session?.user?.name || "Unknown"}. This is your profile based on the
         consented claims you approved.
