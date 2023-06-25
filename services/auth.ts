@@ -7,7 +7,20 @@ import { authOptions } from "./nextAuthOptions";
 
 // import supabase from "./supabase";
 
-export const getAuthUser = async (req: VercelRequest, res: VercelResponse) => {
+export const getAuthUser = async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<
+  // we love this type
+  | {
+      id?: string | null;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    }
+  | null
+  | undefined
+> => {
   const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
