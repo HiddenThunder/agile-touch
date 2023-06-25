@@ -15,19 +15,27 @@ export const handler: VercelApiHandler = async (req, res) => {
     return;
   }
 
-  // get user from database
-  const user = await supabase.from("users").insert("*").match({
-    email_hash: hash,
-  });
+  // get sender from database
+  const sender = (await supabase.from("senders").insert("*").match({
+    hash: hash,
+  })) as unknown as {
+    sub: string;
+    rep: string;
+    created_at: string;
+  };
 
   // if user doesn't exist, return error
-  if (!user) {
-    res.status(404).json({ error: "User not found" });
+  if (!sender) {
+    res.status(200).json({ sender: {} });
     return;
   }
 
-  res.status(200).json({ user: authUser });
+  if (Number(sender.rep) < 0) {
+    res.status(404).json({ error: "User is banned" });
+    return;
+  }
+
+  res.status(200).json({ sender });
 };
 
 export default allowCors(handler);
-

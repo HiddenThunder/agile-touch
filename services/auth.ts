@@ -26,9 +26,6 @@ export const getAuthUser = async (
   if (!session) {
     return null;
   }
-
-  // console.log("supabase auth", await supabase.auth.getUser());
-
   console.log("session", session);
 
   // HACK: this is a hack for demo purposes, implement proper auth

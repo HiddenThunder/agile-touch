@@ -6,7 +6,7 @@ import { allowCors } from "../../../services/cors";
 
 export const handler: VercelApiHandler = async (req, res) => {
   // get email hash and nonce from query params
-  const { hash, nonce } = req.query;
+  const { hash } = req.query;
 
   const authUser = await getAuthUser(req, res);
 
