@@ -1,15 +1,16 @@
-import { VercelApiHandler } from "@vercel/node";
+import { Session } from "next-auth";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 import supabase from "../../services/supabase";
-import { getAuth } from "../../services/auth";
+import { getAuthUser } from "../../services/auth";
 
-const handler: VercelApiHandler = async (req, res) => {
+const handler = async (req: VercelRequest, res: VercelResponse) => {
   // get email hash and nonce from query params
-  const { hash, nonce } = req.query;
+  const { hash } = req.query;
 
-  const isAuth = getAuth(req.session);
+  const authUser = getAuthUser(req.headers.Session);
 
-  if (!isAuth) {
+  if (!authUser) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
