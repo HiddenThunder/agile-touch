@@ -18,7 +18,7 @@ When you send an email, you need to sign it with your Worldcoin Email signature.
 4. Send an email, and it will be sent with a Worldcoin Email signature
 
 
-When you receive an email, same Chrome extension will verify the signature, and if it is valid, the email will be delivered to your inbox. If the signature is invalid, the email will be delivered to your spam folder.
+When you receive an email from someone else, same Chrome extension will verify the signature, and if it is valid, the email will be delivered to your inbox. If the signature is invalid, the email will be delivered to your spam folder.
 
 
 ## Privacy concerns?
