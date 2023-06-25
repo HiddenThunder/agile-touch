@@ -1,6 +1,6 @@
 import { VercelApiHandler, VercelRequest, VercelResponse } from "@vercel/node";
 
-import supabase from "../../../services/supabase";
+import { supabase_ADMIN_UNSAFE_FULL_ACCESS } from "../../../services/supabase";
 import { getAuthUser } from "../../../services/auth";
 import { allowCors } from "../../../services/cors";
 
@@ -16,9 +16,14 @@ export const handler: VercelApiHandler = async (req, res) => {
   }
 
   // get sender from database
-  const sender = (await supabase.from("senders").insert("*").match({
-    hash: hash,
-  })) as unknown as {
+  const sender = (
+    await supabase_ADMIN_UNSAFE_FULL_ACCESS
+      .from("senders")
+      .select("hash")
+      .match({
+        hash,
+      })
+  ).data?.[0] as unknown as {
     sub: string;
     rep: string;
     created_at: string;
