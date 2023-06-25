@@ -4,62 +4,73 @@ import logo from "../../public/logo.png";
 import { GetServerSidePropsContext } from "next";
 
 import { supabase_ADMIN_UNSAFE_FULL_ACCESS } from "../../services/supabase";
-import { getServerSession } from "next-auth";
-
-import { authOptions } from "../../services/nextAuthOptions";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   //@ts-ignore
-  const { hash } = req.query;
+  const { hash } = context.params;
 
-  const session = await getServerSession(context.req, context.res, authOptions);
+  console.log("hash", hash);
 
-  if (!session) {
-    return null;
+  const { data: email, error: error1 } = await supabase_ADMIN_UNSAFE_FULL_ACCESS
+    .from("emails")
+    .select("sub")
+    .eq("hash", hash)
+    .limit(1)
+    .single();
+
+  if (error1) {
+    console.error("error1", error1);
+    return { props: { error: true } };
   }
-  console.log("session", session);
 
-  // HACK: this is a hack for demo purposes, implement proper auth
-  const authUser = session.user;
+  const { data: sender, error: error2 } =
+    await supabase_ADMIN_UNSAFE_FULL_ACCESS
+      .from("reputation")
+      .select("rep")
+      .eq("sub", email.sub)
+      .limit(1)
+      .single();
 
-  if (!authUser) {
-    return { props: {} };
+  if (error2) {
+    console.error("error2", error2);
+    return { props: { error: true } };
   }
 
-  // get sender from database
-  const [senderRes, emailRes] = await Promise.all([
-    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("senders").select("hash").match({
-      hash,
-    }),
-    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("emails").select("sub").match({
-      hash,
-    }),
-  ]);
+  const isRealHuman = !!email.sub;
 
-  const sender = senderRes.data?.[0] as unknown as {
-    sub: string;
-    rep: string;
-    created_at: string;
-  };
-
-  const isRealHuman =
-    emailRes.data?.length && emailRes.data.length > 0 ? true : false;
-  // if user doesn't exist, return error
-  if (!sender) {
-    return { props: {} };
+  // if user doesn't exist, return default rep
+  if (!sender || !sender.rep) {
+    return { props: { error: true } };
   }
 
   if (Number(sender.rep) < 0) {
-    return { props: {} };
+    return { props: { error: true } };
   }
 
-  return { rep: sender.rep, isRealHuman };
+  console.log("rep", sender.rep, isRealHuman);
+  return { props: { rep: sender.rep, isRealHuman } };
 }
 
-export default function Index(props: { rep: string; isRealHuman: boolean }) {
+export default function Index(props: { error: boolean, rep: string; isRealHuman: boolean }) {
+  if (props.error) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <Image src={logo} alt="Worldcoinemail Logo" />
+        <h1>Invalid hash</h1>
+
+      </div>
+    )
+  }
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <Image src={logo} alt="Worldcoinemail Logo" />
+
+      {props.isRealHuman ? (
+        <img src="https://em-content.zobj.net/thumbs/240/apple/354/check-mark-button_2705.png" alt="Real" />
+      ) : (
+        <img src="https://em-content.zobj.net/thumbs/240/apple/354/cross-mark_274c.png" alt="Fake" />
+      )}
+
       {props.isRealHuman ? (
         <h1>We are pretty sure this email was sent to you by a real person</h1>
       ) : (

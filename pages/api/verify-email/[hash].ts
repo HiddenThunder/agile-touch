@@ -15,26 +15,41 @@ export const handler: VercelApiHandler = async (req, res) => {
     return;
   }
 
-  // get sender from database
-  const [senderRes, emailRes] = await Promise.all([
-    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("reputation").select("hash").match({
-      hash,
-    }),
-    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("emails").select("sub").match({
-      hash,
-    }),
-  ]);
+  console.log("hash", hash);
 
-  const sender = senderRes.data?.[0] as unknown as {
-    sub: string;
-    rep: string;
-    created_at: string;
-  };
+  const { data: email, error: error1 } = await supabase_ADMIN_UNSAFE_FULL_ACCESS
+    .from("emails")
+    .select("sub")
+    .eq("hash", hash)
+    .limit(1)
+    .single();
 
-  const isRealHuman =
-    emailRes.data?.length && emailRes.data.length > 0 ? true : false;
-  // if user doesn't exist, return error
-  if (!sender) {
+  if (error1) {
+    console.error("error1", error1);
+
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+
+  const { data: sender, error: error2 } =
+    await supabase_ADMIN_UNSAFE_FULL_ACCESS
+      .from("reputation")
+      .select("rep")
+      .eq("sub", email.sub)
+      .limit(1)
+      .single();
+
+  if (error2) {
+    console.error("error2", error2);
+
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+
+  const isRealHuman = !!email.sub;
+
+  // if user doesn't exist, return default rep
+  if (!sender || !sender.rep) {
     res.status(200).json({ rep: 5, isRealHuman });
     return;
   }

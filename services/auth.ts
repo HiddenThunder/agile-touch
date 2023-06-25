@@ -25,10 +25,6 @@ export const getAuthUser = async (
   const authHeader = req.headers["x-fake-header"] as string;
   const jwt = authHeader?.split(" ")[1];
 
-  console.log("headers", req.headers["x-fake-header"]);
-
-  console.log("jwt", jwt);
-
   if (!jwt) {
     const session = await getServerSession(req, res, authOptions);
 
