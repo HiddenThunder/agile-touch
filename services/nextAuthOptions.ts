@@ -96,51 +96,51 @@ export const authOptions: AuthOptions = {
       token: JWT;
       user: User;
     }) {
-      try {
-        // HACK: bruh i dont know what is wrong with you
-        // but please fix creating users
-        // we need to integrate into supabase flow properly
-        const { data, error } = await supabase.auth.signUp({
-          email: token.email as string,
-          // HACK: !!!
-          password: "12345678",
-          options: {
-            data: {
-              id: token.sub,
-              name: token.name,
-              image: token.picture,
-            },
-          },
-        });
+      // try {
+      //   // HACK: bruh i dont know what is wrong with you
+      //   // but please fix creating users
+      //   // we need to integrate into supabase flow properly
+      //   const { data, error } = await supabase.auth.signUp({
+      //     email: token.email as string,
+      //     // HACK: !!!
+      //     password: "12345678",
+      //     options: {
+      //       data: {
+      //         id: token.sub,
+      //         name: token.name,
+      //         image: token.picture,
+      //       },
+      //     },
+      //   });
 
-        if (error) {
-          console.error("USER WAS NOT SAVED", { error });
-        }
+      //   if (error) {
+      //     console.error("USER WAS NOT SAVED", { error });
+      //   }
 
-        console.log("USER WAS SAVED", { data });
-      } catch (error) {
-        console.error("USER WAS NOT SAVED", { error });
-      }
+      //   console.log("USER WAS SAVED", { data });
+      // } catch (error) {
+      //   console.error("USER WAS NOT SAVED", { error });
+      // }
 
       // Send properties to the client, like an access_token from a provider.
       // (session as any).accessToken = token.access_token as string;
       // (session as any).error = token.error as string;
       session.user = token.user as User;
 
-      try {
-        const { data, error } = await supabase.auth.setSession({
-          access_token: token.access_token as string,
-          refresh_token: token.refresh_token as string,
-        });
+      // try {
+      //   const { data, error } = await supabase.auth.setSession({
+      //     access_token: token.access_token as string,
+      //     refresh_token: token.refresh_token as string,
+      //   });
 
-        if (error) {
-          console.error("USER SESSION WAS NOT SET", { error });
-        }
+      //   if (error) {
+      //     console.error("USER SESSION WAS NOT SET", { error });
+      //   }
 
-        console.log("USER SESSION WAS SET", { data });
-      } catch (error) {
-        console.error("USER SESSION WAS NOT SET", { error });
-      }
+      //   console.log("USER SESSION WAS SET", { data });
+      // } catch (error) {
+      //   console.error("USER SESSION WAS NOT SET", { error });
+      // }
 
       return session;
     },
