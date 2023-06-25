@@ -14,4 +14,5 @@ export default function Index() {
         <a href="https:///github.com/worldcoin-email/extension">https:///github.com/worldcoin-email/extension</a>
       </h1>
     </div>
-}  
+  )
+}
