@@ -9,4 +9,12 @@ if (!supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+export const supabase_ADMIN_UNSAFE_FULL_ACCESS = (() => {
+  const service_role_key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+  const supabase = createClient(supabaseUrl, service_role_key);
+
+  return supabase;
+})();
+
 export default supabase;
