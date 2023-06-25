@@ -31,7 +31,7 @@ export const handler: VercelApiHandler = async (req, res) => {
 
   // if user doesn't exist, return error
   if (!sender) {
-    res.status(200).json({ sender: {} });
+    res.status(200).json({ sender: null });
     return;
   }
 
@@ -40,7 +40,7 @@ export const handler: VercelApiHandler = async (req, res) => {
     return;
   }
 
-  res.status(200).json({ sender });
+  res.status(200).json({ rep: sender.rep });
 };
 
 export default allowCors(handler);
