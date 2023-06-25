@@ -27,12 +27,6 @@ export default function Component() {
   }
   return (
     <div className="flex my-4">
-      <p>
-        <i>
-          Be sure to set you environment variables in your
-          &quot;.env.local&quot; file
-        </i>
-      </p>
       <div className="grow"></div>
       <button
         type="button"
