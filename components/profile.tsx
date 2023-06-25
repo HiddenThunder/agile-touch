@@ -20,7 +20,7 @@ export default function AccessToken() {
 
       <h3 className="text-2xl my-1 mt-4">System Identifier</h3>
       <i className="text-sm">Your unique digital identifier</i>
-      <p>{session?.user?.id || "No system identifier claim found"}</p>
+      <p>{(session?.user as any).id || "No system identifier claim found"}</p>
     </div>
   );
 }
