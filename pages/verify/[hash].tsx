@@ -24,8 +24,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   if (!email) {
-    res.status(200).json({ rep: 0, isRealHuman: false });
-    return;
+    console.error("error1", error1);
+    return { props: { rep: 0, isRealHuman: false } };
   }
 
   const { data: sender, error: error2 } =
