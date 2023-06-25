@@ -45,7 +45,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // if user doesn't exist, return default rep
   if (!sender || !sender.rep) {
-    return { props: { error: true } };
+    return { props: { rep: 5, isRealHuman } };
   }
 
   if (Number(sender.rep) < 0) {
