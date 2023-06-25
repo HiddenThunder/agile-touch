@@ -2,6 +2,7 @@ import { VercelApiHandler, VercelRequest, VercelResponse } from "@vercel/node";
 
 import supabase from "../../../services/supabase";
 import { getAuthUser } from "../../../services/auth";
+import { allowCors } from "../../../services/cors";
 
 export const handler: VercelApiHandler = async (req, res) => {
   // get email hash and nonce from query params
@@ -28,4 +29,5 @@ export const handler: VercelApiHandler = async (req, res) => {
   res.status(200).json({ user: authUser });
 };
 
-export default handler;
+export default allowCors(handler);
+
