@@ -83,9 +83,6 @@ export const authOptions: AuthOptions = {
           token,
           user,
         };
-      } else if (Date.now() < (token.exp as number) * 1000) {
-        // If the access token has not expired yet, return it
-        return token;
       }
 
       return token;
