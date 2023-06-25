@@ -1,5 +1,6 @@
 import { VercelRequest } from "@vercel/node";
 import { VercelResponse } from "@vercel/node";
+import { decodeJwt } from "jose";
 
 import { getServerSession } from "next-auth/next";
 
@@ -21,13 +22,26 @@ export const getAuthUser = async (
   | null
   | undefined
 > => {
-  const session = await getServerSession(req, res, authOptions);
+  const authHeader = req.headers["x-fake-header"] as string;
+  const jwt = authHeader?.split(" ")[1];
 
-  if (!session) {
-    return null;
+  console.log("headers", req.headers["x-fake-header"]);
+
+  console.log("jwt", jwt);
+
+  if (!jwt) {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session) {
+      return null;
+    }
+
+    // HACK: this is a hack for demo purposes, implement proper auth
+    return session.user;
   }
-  console.log("session", session);
+
+  const { sub } = decodeJwt(jwt);
 
   // HACK: this is a hack for demo purposes, implement proper auth
-  return session.user;
+  return { id: sub };
 };

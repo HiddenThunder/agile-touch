@@ -16,7 +16,9 @@ export const allowCors =
     );
     response.setHeader(
       "Access-Control-Allow-Headers",
-      "X-Supabase-Auth, Set-Cookie, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+      // HACK: Using custom auth header instead of Authorization
+      "X-Fake-Header," +
+        "X-Supabase-Auth, Set-Cookie, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
     );
     response.setHeader("Access-Control-Expose-Headers", "set-cookie");
     if (request.method === "OPTIONS") {

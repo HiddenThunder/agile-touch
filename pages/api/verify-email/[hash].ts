@@ -17,7 +17,7 @@ export const handler: VercelApiHandler = async (req, res) => {
 
   // get sender from database
   const [senderRes, emailRes] = await Promise.all([
-    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("senders").select("hash").match({
+    supabase_ADMIN_UNSAFE_FULL_ACCESS.from("reputation").select("hash").match({
       hash,
     }),
     supabase_ADMIN_UNSAFE_FULL_ACCESS.from("emails").select("sub").match({
