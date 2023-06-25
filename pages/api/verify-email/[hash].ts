@@ -1,10 +1,10 @@
 import { VercelApiHandler, VercelRequest, VercelResponse } from "@vercel/node";
 
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth/[...nextauth]";
+import { authOptions } from "../auth/[...nextauth]";
 
-import supabase from "../../services/supabase";
-import { getAuthUser } from "../../services/auth";
+import supabase from "../../../services/supabase";
+import { getAuthUser } from "../../../services/auth";
 
 export const handler: VercelApiHandler = async (req, res) => {
   // get email hash and nonce from query params
