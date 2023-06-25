@@ -14,13 +14,13 @@ export default function AccessToken() {
   return (
     <div>
       <p className="text-sm my-2">
-        Hi {session.user.name || "Unknown"}. This is your profile based on the
+        Hi {session?.user?.name || "Unknown"}. This is your profile based on the
         consented claims you approved.
       </p>
 
       <h3 className="text-2xl my-1 mt-4">System Identifier</h3>
       <i className="text-sm">Your unique digital identifier</i>
-      <p>{session.user.id || "No system identifier claim found"}</p>
+      <p>{session?.user?.id || "No system identifier claim found"}</p>
     </div>
   );
 }

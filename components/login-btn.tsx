@@ -9,9 +9,9 @@ export default function Component() {
           <img
             className="inline-block h-10 w-10 rounded-full"
             height="25px"
-            src={session.user.image}
+            src={session.user?.image!}
           />{" "}
-          {session.user.name}
+          {session.user?.name}
         </p>
         <div className="grow"></div>
         <button
@@ -29,7 +29,8 @@ export default function Component() {
     <div className="flex my-4">
       <p>
         <i>
-          Be sure to set you environment variables in your &quot;.env.local&quot; file
+          Be sure to set you environment variables in your
+          &quot;.env.local&quot; file
         </i>
       </p>
       <div className="grow"></div>
