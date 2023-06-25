@@ -16,11 +16,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .select("sub")
     .eq("hash", hash)
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error1) {
     console.error("error1", error1);
     return { props: { error: true } };
+  }
+
+  if (!email) {
+    res.status(200).json({ rep: 0, isRealHuman: false });
+    return;
   }
 
   const { data: sender, error: error2 } =
@@ -29,7 +34,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       .select("rep")
       .eq("sub", email.sub)
       .limit(1)
-      .single();
+      .maybeSingle();
 
   if (error2) {
     console.error("error2", error2);

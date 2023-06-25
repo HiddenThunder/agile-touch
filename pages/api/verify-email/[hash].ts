@@ -22,12 +22,17 @@ export const handler: VercelApiHandler = async (req, res) => {
     .select("sub")
     .eq("hash", hash)
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error1) {
     console.error("error1", error1);
 
     res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+
+  if (!email) {
+    res.status(200).json({ rep: 0, isRealHuman: false });
     return;
   }
 
@@ -37,7 +42,7 @@ export const handler: VercelApiHandler = async (req, res) => {
       .select("rep")
       .eq("sub", email.sub)
       .limit(1)
-      .single();
+      .maybeSingle();
 
   if (error2) {
     console.error("error2", error2);
