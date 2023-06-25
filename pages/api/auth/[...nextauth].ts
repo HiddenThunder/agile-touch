@@ -33,7 +33,12 @@ export const authOptions = {
       },
       idToken: true,
       checks: ["pkce", "state"],
-      profile(profile: { sub: string; name: string; email: string }) {
+      profile(profile: {
+        sub: string;
+        name: string;
+        email: string;
+        id: string;
+      }) {
         console.log({ profile });
         return {
           id: profile.sub,
