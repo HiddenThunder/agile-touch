@@ -4,7 +4,7 @@
 
 Anti-spam Chrome extension to send and receive verifiably human emails.
 
-[Install extension](https://github.com/hiddenthunder/worldcoin-email-chrome)
+[Install extension](https://github.com/worldcoin-email/extension)
 
 ## How it works
 
@@ -13,7 +13,7 @@ When you send an email, you need to sign it with your Worldcoin Email signature.
 ## How to use
 
 1. Login into https://worldcoinemail.org
-2. Install Chrome extension [here](https://github.com/hiddenthunder/worldcoin-email-chrome)
+2. Install Chrome extension [here](https://github.com/worldcoin-email/extension)
 3. Visit https://worldcoinemail.org/auth if not opened automatically
 4. Send an email, and it will be sent with a Worldcoin Email signature
 
