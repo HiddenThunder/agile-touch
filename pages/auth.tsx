@@ -8,42 +8,42 @@ import LoginButton from "../components/login-btn";
 import Profile from "../components/profile";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const token = await getToken({
-    req: context.req,
-    secret: process.env.JWT_SECRET,
-  });
+    const token = await getToken({
+        req: context.req,
+        secret: process.env.JWT_SECRET,
+    });
 
-  return {
-    props: {
-      token,
-    },
-  };
+    return {
+        props: {
+            token,
+        },
+    };
 }
 
 export const Auth: React.FC<{ token: string }> = (props) => {
-  const { token } = props;
+    const { token } = props;
 
-  if (!token)
+    if (!token)
+        return (
+            <>
+                <LoginButton />
+            </>
+        );
+
     return (
-      <>
-        <LoginButton />
-      </>
-    );
+        <>
+            <LoginButton />
 
-  return (
-    <>
-      <LoginButton />
+            <h1>Logged in! You can now close this window.</h1>
 
-      <h1>Logged in! You can now close this window.</h1>
-
-      <Script id="token-set">
-        {`
-            window.localStorage.setItem('token', '${token}');
-            window.__WORLDCOIN_EMAIL_ACCESS_TOKEN__ = ${JSON.stringify(token)};
+            <Script id="token-set">
+                {`
+                window.localStorage.setItem('token', '${JSON.stringify(token)}');
+                window.__WORLDCOIN_EMAIL_ACCESS_TOKEN__ = ${JSON.stringify(token)};
             `}
-      </Script>
-    </>
-  );
+            </Script>
+        </>
+    );
 };
 
 export default Auth;
